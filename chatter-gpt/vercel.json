@@ -26,19 +26,5 @@
       "src": "/api/cron/sec-latest",
       "dest": "/api/cron/sec-latest.js"
     }
-  ],
-  "crons": [
-    {
-      "path": "/api/cron/reddit?domain=stocks",
-      "schedule": "* * * * *"
-    },
-    {
-      "path": "/api/cron/reddit?domain=crypto",
-      "schedule": "* * * * *"
-    },
-    {
-      "path": "/api/cron/sec-latest",
-      "schedule": "*/5 * * * *"
-    }
   ]
 }
