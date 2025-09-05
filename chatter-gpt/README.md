@@ -46,7 +46,7 @@ Required:
 - `REDDIT_USERNAME`
 - `REDDIT_PASSWORD`
 - `REDDIT_USER_AGENT` = `chatter-live/1.0 by you`
-- `ADMIN_INIT_TOKEN` = vR2ZNko0ZwoSwBiYAD9zA7wZ
+- `ADMIN_INIT_TOKEN` =
 
 Optional (sensible defaults):
 - `SUBS_STOCKS` = `stocks+wallstreetbets+investing`
@@ -61,7 +61,7 @@ Optional (sensible defaults):
 1. **Deploy** on Vercel (Production).
 2. Hit the one-time initializer:
    ```
-   https://YOUR-PROJECT.vercel.app/api/admin/init?token=vR2ZNko0ZwoSwBiYAD9zA7wZ
+   https://YOUR-PROJECT.vercel.app/api/admin/init?token=
    ```
    You should see:
    ```json
