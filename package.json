@@ -1,13 +1,13 @@
 {
-  "name": "chatter-live",
+  "name": "my-vercel-api",
   "private": true,
   "type": "module",
-  "version": "1.2.4",
-  "scripts": {
-    "dev": "vercel dev"
+  "engines": {
+    "node": ">=20"
   },
-  "dependencies": {
-    "@neondatabase/serverless": "^0.9.0",
-    "zod": "3.23.8"
-  }
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "vercel dev"
+  },
+  "dependencies": {}
 }
