@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { ok, fail } from '@/lib/utils';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -22,9 +22,8 @@ export async function GET() {
              (select c from e) as events_1h,
              now() as at
     `);
-    return NextResponse.json({ ok: true, ...rows[0] });
+    return ok(rows[0]);
   } catch (e: any) {
-    // If the schema isn't created yet, still respond with ok:false and the error
-    return NextResponse.json({ ok: false, error: e.message }, { status: 500 });
+    return fail(e.message, 500);
   }
 }
