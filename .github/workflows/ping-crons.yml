@@ -1,9 +1,0 @@
-name: Ping
-on:
-  schedule:
-    - cron: '*/5 * * * *'
-jobs:
-  run:
-    runs-on: ubuntu-latest
-    steps:
-      - run: curl https://chatter-gpt-ten.vercel.app/api/ping
