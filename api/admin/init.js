@@ -1,6 +1,6 @@
 import { query } from '../_lib/db.js';
 
-const schema = `
+const schema = 
 CREATE TABLE IF NOT EXISTS ticker_stats (
   domain TEXT NOT NULL,
   symbol TEXT NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS sec_events (
 
 CREATE INDEX IF NOT EXISTS idx_chatter_rank_domain_score
   ON chatter_rank (domain, chatter_score DESC);
-`;
+;
 
 export default async function handler(req, res) {
   try {
