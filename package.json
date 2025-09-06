@@ -4,8 +4,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "db:bootstrap": "psql \"$DATABASE_URL\" -f db/bootstrap.sql"
+    "start": "next start"
   },
   "dependencies": {
     "next": "14.2.5",
