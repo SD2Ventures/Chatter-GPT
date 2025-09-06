@@ -34,13 +34,24 @@ CREATE INDEX IF NOT EXISTS idx_mentions_symbol ON mentions(symbol);
 CREATE INDEX IF NOT EXISTS idx_mentions_created ON mentions(created_utc);
 `;
 
-export default async function handler(req, res){
-  if (req.method !== "POST") return res.status(405).json({error:"POST required"});
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed (POST required)" });
+  }
+
+  // --- Token enforcement ---
+  const token = (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
+  const expected = process.env.ADMIN_INIT_TOKEN;
+  if (!expected || token !== expected) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  // -------------------------
+
   try {
     await query(SQL);
-    res.status(200).json({ ok:true, message:"Schema ensured" });
-  } catch(e){
+    res.status(200).json({ ok: true, message: "Schema ensured" });
+  } catch (e) {
     console.error(e);
-    res.status(500).json({ ok:false, error:String(e) });
+    res.status(500).json({ ok: false, error: String(e) });
   }
 }
