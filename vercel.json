@@ -7,13 +7,5 @@
       "maxDuration": 30,
       "memory": 1024
     }
-  },
-  "rewrites": [
-    { "source": "/api/top", "destination": "/api/top.js" },
-    { "source": "/api/explain", "destination": "/api/explain.js" },
-    { "source": "/api/admin/init", "destination": "/api/admin/init.js" },
-    { "source": "/api/cron/reddit", "destination": "/api/cron/reddit.js" },
-    { "source": "/api/cron/sec-latest", "destination": "/api/cron/sec-latest.js" },
-    { "source": "/api/ping", "destination": "/api/ping.js" }
-  ]
+  }
 }
