@@ -1,68 +1,46 @@
-import { query } from '../_lib/db.js';
+import { query } from "../_lib/db.js";
 
-const schema = `
-CREATE TABLE IF NOT EXISTS ticker_stats (
-  domain TEXT NOT NULL,
-  symbol TEXT NOT NULL,
-  ema_count DOUBLE PRECISION,
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  PRIMARY KEY (domain, symbol)
-);
-
+const SQL = `
 CREATE TABLE IF NOT EXISTS posts_ingested (
-  source TEXT NOT NULL,
-  post_id TEXT PRIMARY KEY
-);
-
-CREATE TABLE IF NOT EXISTS chatter_rank (
-  domain TEXT NOT NULL,
-  symbol TEXT NOT NULL,
-  name   TEXT,
-  chatter_score DOUBLE PRECISION NOT NULL,
-  reason TEXT,
-  last_seen TIMESTAMPTZ NOT NULL,
-  evidence JSONB,
-  as_of TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  PRIMARY KEY (domain, symbol)
-);
-
-CREATE TABLE IF NOT EXISTS chatter_explain (
-  domain TEXT NOT NULL,
-  symbol TEXT NOT NULL,
-  name   TEXT,
-  chatter_score DOUBLE PRECISION NOT NULL,
-  signals JSONB,
-  evidence JSONB,
-  last_seen TIMESTAMPTZ NOT NULL,
-  as_of TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  PRIMARY KEY (domain, symbol)
-);
-
-CREATE TABLE IF NOT EXISTS sec_events (
   id BIGSERIAL PRIMARY KEY,
-  ticker TEXT,
-  event_type TEXT,
-  filing_date TIMESTAMPTZ,
-  url TEXT
+  source TEXT NOT NULL,               -- 'reddit'|'web'
+  external_id TEXT UNIQUE,            -- reddit id or URL hash
+  url TEXT,
+  title TEXT,
+  author TEXT,
+  channel TEXT,                       -- subreddit or site label
+  created_utc TIMESTAMPTZ,
+  score INT,
+  num_comments INT,
+  fulltext TEXT,
+  symbols TEXT[],
+  inserted_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_chatter_rank_domain_score
-  ON chatter_rank (domain, chatter_score DESC);
+CREATE TABLE IF NOT EXISTS mentions (
+  id BIGSERIAL PRIMARY KEY,
+  external_id TEXT NOT NULL,
+  symbol TEXT NOT NULL,
+  count INT DEFAULT 1,
+  created_utc TIMESTAMPTZ,
+  source TEXT NOT NULL,
+  engagement INT DEFAULT 0,           -- score + comments for reddit; 1 for web
+  UNIQUE(external_id, symbol)
+);
+
+CREATE INDEX IF NOT EXISTS idx_posts_created ON posts_ingested(created_utc);
+CREATE INDEX IF NOT EXISTS idx_posts_symbols ON posts_ingested USING GIN(symbols);
+CREATE INDEX IF NOT EXISTS idx_mentions_symbol ON mentions(symbol);
+CREATE INDEX IF NOT EXISTS idx_mentions_created ON mentions(created_utc);
 `;
 
-export default async function handler(req, res) {
+export default async function handler(req, res){
+  if (req.method !== "POST") return res.status(405).json({error:"POST required"});
   try {
-    const url = new URL(req.url, `http://${req.headers.host}`);
-    const token = url.searchParams.get('token');
-
-    if (!process.env.ADMIN_INIT_TOKEN || token !== process.env.ADMIN_INIT_TOKEN) {
-      res.status(403).json({ error: 'forbidden' });
-      return;
-    }
-
-    await query(schema);
-    res.status(200).json({ ok: true, msg: 'Schema created/verified' });
-  } catch (e) {
-    res.status(500).json({ error: e?.message || String(e) });
+    await query(SQL);
+    res.status(200).json({ ok:true, message:"Schema ensured" });
+  } catch(e){
+    console.error(e);
+    res.status(500).json({ ok:false, error:String(e) });
   }
 }
