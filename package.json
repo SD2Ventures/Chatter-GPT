@@ -1,5 +1,5 @@
 {
-  "name": "my-vercel-api",
+  "name": "omni-chatter",
   "private": true,
   "type": "module",
   "engines": { "node": ">=20" },
@@ -7,5 +7,8 @@
     "dev": "vercel dev",
     "start": "vercel dev"
   },
-  "dependencies": {}
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "pg": "^8.11.3"
+  }
 }
