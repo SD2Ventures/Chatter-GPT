@@ -1,0 +1,1 @@
+export async function query(q,p=[]){return [];}
