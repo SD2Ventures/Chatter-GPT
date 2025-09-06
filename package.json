@@ -1,5 +1,5 @@
 {
-  "name": "omni-chatter",
+  "name": "chatter-gpt",
   "private": true,
   "type": "module",
   "engines": { "node": ">=20" },
