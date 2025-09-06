@@ -1,6 +1,17 @@
-// Neon serverless SQL client
-import { neon } from '@neondatabase/serverless';
-export const sql = neon(process.env.DATABASE_URL);
+import { Pool } from "pg";
+
+const { DATABASE_URL } = process.env;
+
+export const pool = new Pool({
+  connectionString: DATABASE_URL,
+  max: 4,
+  ssl: /neon\.tech|supabase\.co|vercel-postgres\.com/.test(DATABASE_URL || "")
+    ? { rejectUnauthorized: false }
+    : undefined
+});
+
 export async function query(q, params = []) {
-  return await sql(q, params);
+  const c = await pool.connect();
+  try { return await c.query(q, params); }
+  finally { c.release(); }
 }
