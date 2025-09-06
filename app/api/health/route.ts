@@ -1,0 +1,30 @@
+import { NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+export async function GET() {
+  try {
+    const pool = db();
+    const { rows } = await pool.query(`
+      with m as (
+        select count(*)::int as c
+        from mentions
+        where published_at > now() - interval '1 hour'
+      ),
+      e as (
+        select count(*)::int as c
+        from events
+        where published_at > now() - interval '1 hour'
+      )
+      select (select c from m) as mentions_1h,
+             (select c from e) as events_1h,
+             now() as at
+    `);
+    return NextResponse.json({ ok: true, ...rows[0] });
+  } catch (e: any) {
+    // If the schema isn't created yet, still respond with ok:false and the error
+    return NextResponse.json({ ok: false, error: e.message }, { status: 500 });
+  }
+}
