@@ -1,5 +1,5 @@
 {
   "functions": {
-    "app/api/**/route.ts": { "runtime": "nodejs18.x" }
+    "app/api/**/route.ts": { "runtime": "nodejs20.x" }
   }
 }
