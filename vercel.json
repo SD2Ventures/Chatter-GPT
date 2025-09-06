@@ -1,34 +1,19 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
   "functions": {
-    "api/*.js": {
-      "runtime": "vercel-node@20.0.0"
+    "api/**/*.js": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 30,
+      "memory": 1024
     }
   },
-  "routes": [
-    {
-      "src": "/api/top",
-      "dest": "/api/top.js"
-    },
-    {
-      "src": "/api/explain",
-      "dest": "/api/explain.js"
-    },
-    {
-      "src": "/api/admin/init",
-      "dest": "/api/admin/init.js"
-    },
-    {
-      "src": "/api/cron/reddit",
-      "dest": "/api/cron/reddit.js"
-    },
-    {
-      "src": "/api/cron/sec-latest",
-      "dest": "/api/cron/sec-latest.js"
-    },
-    {
-      "src": "/api/ping",
-      "dest": "/api/ping.js"
-    }
+  "rewrites": [
+    { "source": "/api/top", "destination": "/api/top.js" },
+    { "source": "/api/explain", "destination": "/api/explain.js" },
+    { "source": "/api/admin/init", "destination": "/api/admin/init.js" },
+    { "source": "/api/cron/reddit", "destination": "/api/cron/reddit.js" },
+    { "source": "/api/cron/sec-latest", "destination": "/api/cron/sec-latest.js" },
+    { "source": "/api/ping", "destination": "/api/ping.js" }
   ]
 }
