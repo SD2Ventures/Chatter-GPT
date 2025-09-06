@@ -1,9 +1,21 @@
-name: Ping
+name: Ping Vercel Cron Endpoints
+
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
 jobs:
-  run:
+  ping:
     runs-on: ubuntu-latest
     steps:
-      - run: curl https://chatter-gpt-ten.vercel.app/api/ping
+      - name: Stocks ingest
+        run: |
+          curl -fsS "https://chatter-gpt-ten.vercel.app/api/cron/reddit?domain=stocks" || true
+      - name: Crypto ingest
+        run: |
+          curl -fsS "https://chatter-gpt-ten.vercel.app/api/cron/reddit?domain=crypto" || true
+      - name: SEC latest (optional)
+        run: |
+          curl -fsS "https://chatter-gpt-ten.vercel.app/api/cron/sec-latest" || true
+
